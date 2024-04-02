@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Meta {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  game      Game     @relation(fields: [gameId], references: [id])
+  gameId    String   @unique @db.ObjectId
+  heroes    Hero[]
+  guns      Gun[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model Game {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String @unique
+  Meta Meta?
+  Hero Hero?
+  Gun  Gun?
+}
+
+model Hero {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  name   String @unique
+  meta   Meta   @relation(fields: [metaId], references: [id])
+  metaId String @db.ObjectId
+  game   Game   @relation(fields: [gameId], references: [id])
+  gameId String @unique @db.ObjectId
+}
+
+model Gun {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  name   String @unique
+  meta   Meta   @relation(fields: [metaId], references: [id])
+  metaId String @db.ObjectId
+  game   Game   @relation(fields: [gameId], references: [id])
+  gameId String @unique @db.ObjectId
+}
