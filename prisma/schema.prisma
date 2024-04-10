@@ -27,17 +27,21 @@ model Game {
   id   String @id @default(auto()) @map("_id") @db.ObjectId
   name String @unique
   Meta Meta?
-  Hero Hero?
-  Gun  Gun?
+  Hero Hero[]
+  Gun  Gun[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 }
 
 model Hero {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   name   String @unique
-  meta   Meta   @relation(fields: [metaId], references: [id])
-  metaId String @db.ObjectId
+  meta   Meta?   @relation(fields: [metaId], references: [id])
+  metaId String? @db.ObjectId
   game   Game   @relation(fields: [gameId], references: [id])
-  gameId String @unique @db.ObjectId
+  gameId String @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 }
 
 model Gun {
@@ -46,5 +50,7 @@ model Gun {
   meta   Meta   @relation(fields: [metaId], references: [id])
   metaId String @db.ObjectId
   game   Game   @relation(fields: [gameId], references: [id])
-  gameId String @unique @db.ObjectId
+  gameId String  @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 }
